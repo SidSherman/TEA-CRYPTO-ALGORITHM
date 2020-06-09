@@ -22,24 +22,74 @@ namespace TEA
     public partial class MainWindow : Window
     {
         private string cipher;
-        Thread t_key_length;
+       // Thread t_key_length;
         Thread t_ascii_hex;
         //CSerpent serpent;
 
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             //потоки для обновления размера ключа и перевода текствого значения в шестнадцатиричное
-            t_key_length = new Thread(KeyLength);
+            /*t_key_length = new Thread(KeyLength);
             t_key_length.IsBackground = true;
-            t_key_length.Start();
-            t_ascii_hex = new Thread(UpdateHexval);
+            t_key_length.Start();*/
+          /*  t_ascii_hex = new Thread(UpdateVal);
             t_ascii_hex.IsBackground = true;
-            t_ascii_hex.Start();
+            t_ascii_hex.Start();*/
+           // tbx_plain_ascii.Multiline = true;
+           // tbx_plain_ascii.ScrollBars = ScrollBars.Both;
+        }
+
+        private void plaintext_KeyUp(object sender, KeyEventArgs e)
+        {
+            tbx_plain_bin.Text = ASCIIToBinString(tbx_plain_ascii.Text);
+        }
+
+        private void plaintext_bin_KeyUp(object sender, KeyEventArgs e)
+        {
+            tbx_plain_ascii.Text = BinToASCIIString(tbx_plain_bin.Text);
+        }
+
+        private void chipher_KeyUp(object sender, KeyEventArgs e)
+        {
+            tbx_cipher_bin.Text = ASCIIToBinString(tbx_cipher.Text);
+        }
+
+
+        private void key_KeyUp(object sender, KeyEventArgs e)
+        {
+            int klength;
+                    
+            klength = tbx_key.Text.Length * 8;
+            if (klength == 128)
+                lbl_key_length.Foreground = Brushes.Green;
+            else if (klength < 128 && klength > 0)
+                lbl_key_length.Foreground = Brushes.Orange;
+            else
+                lbl_key_length.Foreground = Brushes.Red;
+            lbl_key_length.Content = klength + " Битов";
+            tbx_key_bin.Text = ASCIIToBinString(tbx_key.Text);
+
+        }
+        private void key_bin_KeyUp(object sender, KeyEventArgs e)
+        {
+            int klength;
+            tbx_key.Text = BinToASCIIString(tbx_key_bin.Text);
+            klength = tbx_key.Text.Length * 8;
+            if (klength == 128)
+                lbl_key_length.Foreground = Brushes.Green;
+            else if (klength < 128 && klength > 0)
+                lbl_key_length.Foreground = Brushes.Orange;
+            else
+                lbl_key_length.Foreground = Brushes.Red;
+            lbl_key_length.Content = klength + " Битов";
+            
+
         }
 
         // действие при нажатии на кнопку Зашифровать
@@ -81,7 +131,7 @@ namespace TEA
         }
 
         // перевод из 16-тиричной в текст ascii
-        private string ASCIIToHexString(string asciitext)
+        private string ASCIIToBinString(string asciitext)
         {
             byte[] text = Encoding.Default.GetBytes(asciitext);
             string str = "";
@@ -96,49 +146,74 @@ namespace TEA
             return str;
         }
 
+        private string BinToASCIIString(string asciitext)
+        {
+            string text = asciitext;
+            string str = "";
+            uint formatted;
+            if (text.Length %8 != 0)
+                return "";
+            for (int i = 0; i < text.Length; i += 8)
+            {
+                formatted = Convert.ToUInt32(text.Substring(i,  8), 2); ;
+                str = str + Convert.ToChar(formatted);
+                //str = str + (Convert.ToString(text[i], 2));
+            }
+
+            return str;
+        }
+
+
 
         // функция каждые 250 ms перводит текст из поля с текстом ascii в поле с значениями в 16-тиричной системе
-        private void UpdateHexval()
-        {
+        /*  private void UpdateVal()
+          {
+              int klength;
+              while (true)
+              {
 
-            while (true)
-            {
+                  Dispatcher.Invoke((Action)delegate
+                  {
+                     // tbx_plain_bin.Text = ASCIIToHexString(tbx_plain_ascii.Text);
+                      //tbx_cipher_bin.Text = ASCIIToHexString(tbx_cipher.Text);
+                      klength = tbx_key.Text.Length * 8;
+                      if (klength == 128)
+                          lbl_key_length.Foreground = Brushes.Green;
+                      else if (klength < 128 && klength > 0)
+                          lbl_key_length.Foreground = Brushes.Orange;
+                      else
+                          lbl_key_length.Foreground = Brushes.Red;
+                      lbl_key_length.Content = klength + " Битов";
+                  });
 
-                Dispatcher.Invoke((Action)delegate
-                {
-                    tbx_plain_bin.Text = ASCIIToHexString(tbx_plain_ascii.Text);
-                    tbx_cipher_bin.Text = ASCIIToHexString(tbx_cipher.Text);
-
-                });
-
-                Thread.Sleep(250);
-            }
-        }
+                  Thread.Sleep(250);
+              }
+          }*/
 
         // функция возвращает длинну ключа каждые 250ms 
-        
-        private void KeyLength()
-        {
-            int klength;
-            while (true)
-            {
+        /*
+         private void KeyLength()
+         {
+             int klength;
+             while (true)
+             {
 
-                Dispatcher.Invoke((Action)delegate
-                {
-                    klength = tbx_key.Text.Length * 8;
-                    if (klength == 128)
-                        lbl_key_length.Foreground = Brushes.Green;
-                    else if (klength < 128 && klength > 0)
-                        lbl_key_length.Foreground = Brushes.Orange;
-                    else
-                        lbl_key_length.Foreground = Brushes.Red;
-                    lbl_key_length.Content = klength + " Битов";
-                });
-                Thread.Sleep(250);
-            }
-        }
+                 Dispatcher.Invoke((Action)delegate
+                 {
+                     klength = tbx_key.Text.Length * 8;
+                     if (klength == 128)
+                         lbl_key_length.Foreground = Brushes.Green;
+                     else if (klength < 128 && klength > 0)
+                         lbl_key_length.Foreground = Brushes.Orange;
+                     else
+                         lbl_key_length.Foreground = Brushes.Red;
+                     lbl_key_length.Content = klength + " Битов";
+                 });
+                 Thread.Sleep(250);
+             }
+         }
+         */
 
-         
 
     }
 }

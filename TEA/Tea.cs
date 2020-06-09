@@ -20,7 +20,7 @@ namespace TeaCrypto
             // Приведим ключ  нужному формату
             uint[] formattedKey = FormatKey(Key);
 
-            // добавляем нулб, если длина текста не кратна 2
+            // добавляем нуль, если длина текста не кратна 2
             if (Data.Length % 2 != 0) Data += '\0'; 		
             byte[] dataBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(Data);
 
