@@ -45,22 +45,24 @@ namespace TEA
            // tbx_plain_ascii.ScrollBars = ScrollBars.Both;
         }
 
+
+        // Действие при вводе в поле открытого текста
         private void plaintext_KeyUp(object sender, KeyEventArgs e)
         {
             tbx_plain_bin.Text = ASCIIToBinString(tbx_plain_ascii.Text);
         }
-
+        // Действие при вводе в поле открытого текстав 2-ой системе
         private void plaintext_bin_KeyUp(object sender, KeyEventArgs e)
         {
             tbx_plain_ascii.Text = BinToASCIIString(tbx_plain_bin.Text);
         }
-
+        // Действие при вводе в поле шифртекста текста
         private void chipher_KeyUp(object sender, KeyEventArgs e)
         {
             tbx_cipher_bin.Text = ASCIIToBinString(tbx_cipher.Text);
         }
 
-
+        // Действие при вводе в поле ключа
         private void key_KeyUp(object sender, KeyEventArgs e)
         {
             int klength;
@@ -76,6 +78,7 @@ namespace TEA
             tbx_key_bin.Text = ASCIIToBinString(tbx_key.Text);
 
         }
+        // Действие при вводе в поле ключа 2-ой системе
         private void key_bin_KeyUp(object sender, KeyEventArgs e)
         {
             int klength;
@@ -146,6 +149,7 @@ namespace TEA
             return str;
         }
 
+        // Перевод из двоичной системы в строку
         private string BinToASCIIString(string asciitext)
         {
             string text = asciitext;

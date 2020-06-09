@@ -79,7 +79,7 @@ namespace TeaCrypto
         }
 
         // основные пребразования
-        #region Tea Algorithm
+     /*   #region Tea Algorithm
 
         public void code(uint[] v, uint[] k)
         {
@@ -121,7 +121,58 @@ namespace TeaCrypto
             v[1] = z;
         }
         #endregion
+     */
+        
+       #region Tea Algorithm
+
+       public void code(uint[] v, uint[] k)
+       {
+           uint y = v[0];
+           uint z = v[1];
+           uint sum = 0;
+           uint delta = 0x9e3779b9;
+           uint n = 32;
+
+           while (n-- > 0)
+           {
+               sum += delta;
+               y += ((z << 4) + k[0]) ^ (z + sum) ^ ((z >> 5) + k[1]);
+               z += ((y << 4) + k[2]) ^ (y + sum) ^ ((y >> 5) + k[3]);
+           }
+
+           v[0] = y;
+           v[1] = z;
+       }
+
+       public void decode(uint[] v, uint[] k)
+       {
+           uint n = 32;
+           uint sum;
+           uint y = v[0];
+           uint z = v[1];
+           uint delta = 0x9e3779b9;
+
+           sum = delta << 5;
+
+           while (n-- > 0)
+           {
+               z -= ((y << 4) + k[2]) ^ (y + sum) ^ ((y >> 5) + k[3]);
+               y -= ((z << 4) + k[0]) ^ (z + sum) ^ ((z >> 5) + k[1]);
+               sum -= delta;
+           }
+
+           v[0] = y;
+           v[1] = z;
+       }
+       #endregion
+
+
+
+
     }
+
+
+
 
 }
 
