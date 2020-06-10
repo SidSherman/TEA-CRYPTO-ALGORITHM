@@ -38,18 +38,24 @@ namespace TEA
             /*t_key_length = new Thread(KeyLength);
             t_key_length.IsBackground = true;
             t_key_length.Start();*/
-          /*  t_ascii_hex = new Thread(UpdateVal);
+            t_ascii_hex = new Thread(UpdateVal);
             t_ascii_hex.IsBackground = true;
-            t_ascii_hex.Start();*/
+            t_ascii_hex.Start();
            // tbx_plain_ascii.Multiline = true;
            // tbx_plain_ascii.ScrollBars = ScrollBars.Both;
         }
 
+        
+         /*  private void cipher_hex_KeyUp(object sender, KeyEventArgs e)
+        {
+            tbx_cipher.Text = HexToAnsiiString(tbx_cipher_hex.Text);
+        }*/
 
         // Действие при вводе в поле открытого текста
         private void plaintext_KeyUp(object sender, KeyEventArgs e)
         {
             tbx_plain_bin.Text = ASCIIToBinString(tbx_plain_ascii.Text);
+            tbx_plain_hex.Text = ASCIIToHexString(tbx_plain_ascii.Text);
         }
         // Действие при вводе в поле открытого текстав 2-ой системе
         private void plaintext_bin_KeyUp(object sender, KeyEventArgs e)
@@ -57,10 +63,10 @@ namespace TEA
             tbx_plain_ascii.Text = BinToASCIIString(tbx_plain_bin.Text);
         }
         // Действие при вводе в поле шифртекста текста
-        private void chipher_KeyUp(object sender, KeyEventArgs e)
+      /*  private void chipher_KeyUp(object sender, KeyEventArgs e)
         {
-            tbx_cipher_bin.Text = ASCIIToBinString(tbx_cipher.Text);
-        }
+            tbx_cipher_hex.Text = ASCIIToHexString(tbx_cipher.Text);
+        }*/
 
         // Действие при вводе в поле ключа
         private void key_KeyUp(object sender, KeyEventArgs e)
@@ -115,6 +121,23 @@ namespace TEA
 
         }
 
+        
+     /*        private void btn_hex_from_Click(object sender, RoutedEventArgs e)
+        {
+
+
+            tbx_cipher_hex.Text = HexToAnsiiString(tbx_cipher.Text);
+
+        }
+        private void btn_hex_Click(object sender, RoutedEventArgs e)
+        {
+
+
+            tbx_cipher_hex.Text = ASCIIToHexString(tbx_cipher.Text);
+
+        }*/
+
+
         // действие при нажатии на кнопку Расшифроваь
 
         private void btn_decrypt_Click(object sender, RoutedEventArgs e)
@@ -148,6 +171,39 @@ namespace TEA
 
             return str;
         }
+        // перевод из текста ascii в 16-ую
+        private string ASCIIToHexString(string asciitext)
+        {
+            byte[] text = Encoding.Default.GetBytes(asciitext);
+            string str = "";
+            string formatted;
+            for (int i = 0; i < text.Length; i++)
+            {
+                str = str + text[i].ToString("X2");
+                //str = str + (Convert.ToString(text[i], 2));
+            }
+
+            return str;
+        }
+
+
+        // перевод из текста ascii в 16-ую
+        private string HexToAnsiiString(string asciitext)
+        {
+            byte[] text = Encoding.Default.GetBytes(asciitext);
+            string str = "";
+            uint formatted;
+            
+            for (int i = 0; i < text.Length; i += 2)
+            {
+                str = str + Convert.ToChar(Convert.ToUInt32(asciitext.Substring(i, 2), 16));
+                //str = str + (Convert.ToString(text[i], 2));
+            }
+
+            return str;
+        }
+
+
 
         // Перевод из двоичной системы в строку
         private string BinToASCIIString(string asciitext)
@@ -170,7 +226,7 @@ namespace TEA
 
 
         // функция каждые 250 ms перводит текст из поля с текстом ascii в поле с значениями в 16-тиричной системе
-        /*  private void UpdateVal()
+          private void UpdateVal()
           {
               int klength;
               while (true)
@@ -178,21 +234,14 @@ namespace TEA
 
                   Dispatcher.Invoke((Action)delegate
                   {
-                     // tbx_plain_bin.Text = ASCIIToHexString(tbx_plain_ascii.Text);
-                      //tbx_cipher_bin.Text = ASCIIToHexString(tbx_cipher.Text);
-                      klength = tbx_key.Text.Length * 8;
-                      if (klength == 128)
-                          lbl_key_length.Foreground = Brushes.Green;
-                      else if (klength < 128 && klength > 0)
-                          lbl_key_length.Foreground = Brushes.Orange;
-                      else
-                          lbl_key_length.Foreground = Brushes.Red;
-                      lbl_key_length.Content = klength + " Битов";
+                     // tbx_cipher_hex.Text = ASCIIToHexString(tbx_cipher.Text);
+                      tbx_cipher_bin.Text = ASCIIToBinString(tbx_cipher.Text);
+                      
                   });
 
                   Thread.Sleep(250);
               }
-          }*/
+          }
 
         // функция возвращает длинну ключа каждые 250ms 
         /*
